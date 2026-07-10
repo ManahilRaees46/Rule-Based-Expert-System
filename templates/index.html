@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Expert System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header>
+
+        <h1>🩺 AI Medical Expert System</h1>
+
+        <p>
+            Rule-Based Diagnosis using Forward Chaining
+        </p>
+
+    </header>
+
+    <div class="card-box" style="margin-bottom:20px;">
+
+    <h3>Selected Symptoms</h3>
+
+    <p id="selected-count">0</p>
+
+</div>
+
+    <!-- Form -->
+
+    <form method="POST">
+
+        <div class="card">
+
+            <h2>Select Symptoms</h2>
+
+            <div class="symptom-grid">
+
+                <label><input type="checkbox" name="symptoms" value="fever"> Fever</label>
+
+                <label><input type="checkbox" name="symptoms" value="cough"> Cough</label>
+
+                <label><input type="checkbox" name="symptoms" value="fatigue"> Fatigue</label>
+
+                <label><input type="checkbox" name="symptoms" value="headache"> Headache</label>
+
+                <label><input type="checkbox" name="symptoms" value="sore_throat"> Sore Throat</label>
+
+                <label><input type="checkbox" name="symptoms" value="runny_nose"> Runny Nose</label>
+
+                <label><input type="checkbox" name="symptoms" value="body_pain"> Body Pain</label>
+
+                <label><input type="checkbox" name="symptoms" value="chills"> Chills</label>
+
+                <label><input type="checkbox" name="symptoms" value="breathing_problem"> Breathing Problem</label>
+
+                <label><input type="checkbox" name="symptoms" value="sneezing"> Sneezing</label>
+
+                <label><input type="checkbox" name="symptoms" value="itchy_eyes"> Itchy Eyes</label>
+
+                <label><input type="checkbox" name="symptoms" value="vomiting"> Vomiting</label>
+
+                <label><input type="checkbox" name="symptoms" value="nausea"> Nausea</label>
+
+                <label><input type="checkbox" name="symptoms" value="diarrhea"> Diarrhea</label>
+
+                <label><input type="checkbox" name="symptoms" value="loss_of_taste"> Loss of Taste</label>
+
+                <label><input type="checkbox" name="symptoms" value="loss_of_smell"> Loss of Smell</label>
+
+                <label><input type="checkbox" name="symptoms" value="high_bp"> High Blood Pressure</label>
+
+                <label><input type="checkbox" name="symptoms" value="dizziness"> Dizziness</label>
+
+                <label><input type="checkbox" name="symptoms" value="skin_rash"> Skin Rash</label>
+
+                <label><input type="checkbox" name="symptoms" value="stomach_pain"> Stomach Pain</label>
+
+            </div>
+
+            <div class="buttons">
+
+                <button type="submit" class="diagnose-btn">
+                    Diagnose
+                </button>
+
+                <button type="button" class="reset-btn" onclick="resetForm()">
+                  Reset
+                </button>
+
+            </div>
+
+        </div>
+
+     <!-- Dashboard -->
+
+{% if result %}
+
+<div class="dashboard">
+
+    <div class="card-box">
+        <h3>Rules Fired</h3>
+        <p>{{ result.rules_fired }}</p>
+    </div>
+
+    <div class="card-box">
+        <h3>Inference Steps</h3>
+        <p>{{ result.steps }}</p>
+    </div>
+
+    <div class="card-box">
+        <h3>Total Facts</h3>
+        <p>{{ result.facts|length }}</p>
+    </div>
+
+    <div class="card-box">
+        <h3>Diagnosis</h3>
+        <p>{{ result.conclusions|length }}</p>
+    </div>
+
+</div>
+
+<!-- Diagnosis -->
+
+<div class="card result-card">
+
+    <h2>🩺 Diagnosis Result</h2>
+
+    {% if result.conclusions %}
+
+        <ul>
+
+            {% for disease in result.conclusions %}
+
+            <li>✅ {{ disease }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+    {% else %}
+
+        <p>No disease matched.</p>
+
+    {% endif %}
+
+</div>
+
+<!-- Inference Log -->
+
+<div class="card">
+
+    <h2>📜 Inference Log</h2>
+
+    {% if result.logs %}
+
+        {% for log in result.logs %}
+
+        <div class="log-box">
+
+            <h4>
+                Step {{ log.step }}
+                &nbsp; | &nbsp;
+                Rule #{{ log.rule_id }}
+            </h4>
+
+            <p>
+
+                <strong>IF</strong>
+
+                {{ log.conditions | join(" AND ") }}
+
+            </p>
+
+            <p>
+
+                <strong>THEN</strong>
+
+                {{ log.conclusion }}
+
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No rules fired.</p>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
